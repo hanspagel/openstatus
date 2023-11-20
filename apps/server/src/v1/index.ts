@@ -1,4 +1,5 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { apiReference } from "@scalar/hono-api-reference";
 import { logger } from "hono/logger";
 
 import type { Plan } from "@openstatus/plans";
@@ -15,6 +16,9 @@ export type Variables = {
 
 export const api = new OpenAPIHono<{ Variables: Variables }>();
 
+/**
+ * OpenAPI Reference
+ */
 api.doc("/openapi", {
   openapi: "3.0.0",
   info: {
@@ -22,6 +26,15 @@ api.doc("/openapi", {
     title: "OpenStatus API",
   },
 });
+
+api.get(
+  "/docs",
+  apiReference({
+    spec: {
+      url: "openapi",
+    },
+  }),
+)
 
 /**
  * Authentification Middleware
